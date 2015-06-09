@@ -1,4 +1,5 @@
-﻿using FacebookPhotoUploader.Common;
+﻿using FacebookPhotoUploader.API.Services;
+using FacebookPhotoUploader.Common;
 using FacebookPhotoUploader.Data;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,9 @@ namespace FacebookPhotoUploader
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-1");
             this.DefaultViewModel[FirstGroupName] = sampleDataGroup;
+
+            var fbService = new FacebookService();
+            await fbService.Login();
         }
 
         /// <summary>
