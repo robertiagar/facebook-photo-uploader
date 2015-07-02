@@ -1,4 +1,6 @@
-﻿using FacebookPhotoUploader.API.Services;
+﻿using Facebook;
+using FacebookPhotoUploader.API.Models;
+using FacebookPhotoUploader.API.Services;
 using FacebookPhotoUploader.Common;
 using FacebookPhotoUploader.Data;
 using System;
@@ -8,10 +10,16 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -24,7 +32,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace FacebookPhotoUploader
 {
-    public sealed partial class PivotPage : Page
+    public sealed partial class PivotPage : Page, IFileOpenPickerContinuable, IProgress<FacebookUploadProgressChangedEventArgs>
     {
         private const string FirstGroupName = "FirstGroup";
         private const string SecondGroupName = "SecondGroup";
@@ -32,6 +40,11 @@ namespace FacebookPhotoUploader
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+
+        private CancellationTokenSource cts;
+        private StatusBar statusBar;
+
+        public static PivotPage Current;
 
         public PivotPage()
         {
@@ -42,6 +55,11 @@ namespace FacebookPhotoUploader
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            this.cts = new CancellationTokenSource();
+
+            Current = this;
+            statusBar = StatusBar.GetForCurrentView();
         }
 
         /// <summary>
@@ -79,6 +97,9 @@ namespace FacebookPhotoUploader
             this.DefaultViewModel[FirstGroupName] = sampleDataGroup;
 
             var fbService = new FacebookService();
+            var settingsService = new SettingsService();
+            fbService.SetSettingsService(settingsService);
+
             await fbService.Login();
         }
 
@@ -168,5 +189,56 @@ namespace FacebookPhotoUploader
         }
 
         #endregion
+
+        private void SecondaryButton1_Click(object sender, RoutedEventArgs e)
+        {
+            FileOpenPicker opener = new FileOpenPicker();
+            opener.ViewMode = PickerViewMode.Thumbnail;
+            opener.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            opener.FileTypeFilter.Add(".jpg");
+            opener.FileTypeFilter.Add(".jpeg");
+            opener.FileTypeFilter.Add(".png");
+
+            opener.PickSingleFileAndContinue();
+        }
+
+        public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
+        {
+            if (args.Files.Count > 0)
+            {
+                var file = args.Files[0];
+                var fbService = new FacebookService();
+                var settingsService = new SettingsService();
+                fbService.SetSettingsService(settingsService);
+
+                await fbService.Login();
+                await statusBar.ShowAsync();
+                await statusBar.ProgressIndicator.ShowAsync();
+                await fbService.UploadFotoAsync(file, null, new Photo { Caption = "test", Place = null, Tags = null }, cts.Token, this);
+            }
+            else
+            {
+            }
+        }
+
+        public async void Report(FacebookUploadProgressChangedEventArgs value)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,async () =>
+            {
+                statusBar.ProgressIndicator.ProgressValue = (float)value.ProgressPercentage / 100;
+                if (value.ProgressPercentage == 100)
+                {
+                    await statusBar.ProgressIndicator.HideAsync();
+                }
+            });
+        }
+
+        private async void SecondaryButton2_Click(object sender, RoutedEventArgs e)
+        {
+            var fbService = new FacebookService();
+            var settingsService = new SettingsService();
+            fbService.SetSettingsService(settingsService);
+            await fbService.Logout();
+        }
     }
 }

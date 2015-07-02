@@ -97,6 +97,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="ContinuationManager.cs" />
     <Compile Include="DataModel\SampleDataSource.cs" />
     <Compile Include="ItemPage.xaml.cs">
       <DependentUpon>ItemPage.xaml</DependentUpon>
@@ -119,7 +120,9 @@
     <Content Include="Assets\StoreLogo.scale-240.png" />
     <Content Include="Assets\WideLogo.scale-240.png" />
     <Content Include="Common\ReadMe.txt" />
-    <None Include="Package.StoreAssociation.xml" />
+    <None Include="Package.StoreAssociation.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +140,12 @@
   <ItemGroup>
     <Reference Include="AsyncOAuth">
       <HintPath>..\packages\AsyncOAuth.0.8.4\lib\AsyncOAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Facebook">
+      <HintPath>..\packages\Facebook.7.0.6\lib\portable-win81+wpa81\Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Facebook.Client">
+      <HintPath>..\packages\Facebook.Client.1.0.4\lib\wpa81\Facebook.Client.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

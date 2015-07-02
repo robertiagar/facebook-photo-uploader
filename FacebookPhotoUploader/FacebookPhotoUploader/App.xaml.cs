@@ -1,9 +1,11 @@
-﻿using FacebookPhotoUploader.Common;
+﻿using FacebookPhotoUploader.API.Services;
+using FacebookPhotoUploader.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -28,6 +30,8 @@ namespace FacebookPhotoUploader
     {
         private TransitionCollection transitions;
 
+        public ContinuationManager ContinuationManager { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -38,6 +42,51 @@ namespace FacebookPhotoUploader
             this.Suspending += this.OnSuspending;
         }
 
+        private Frame CreateRootFrame()
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            // Do not repeat app initialization when the Window already has content, 
+            // just ensure that the window is active 
+            if (rootFrame == null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page 
+                rootFrame = new Frame();
+
+                // Set the default language 
+                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+                rootFrame.NavigationFailed += OnNavigationFailed;
+
+                // Place the frame in the current Window 
+                Window.Current.Content = rootFrame;
+            }
+
+            return rootFrame;
+        }
+
+        private async Task RestoreStatusAsync(ApplicationExecutionState previousExecutionState)
+        {
+            // Do not repeat app initialization when the Window already has content, 
+            // just ensure that the window is active 
+            if (previousExecutionState == ApplicationExecutionState.Terminated)
+            {
+                // Restore the saved session state only when appropriate 
+                try
+                {
+                    await SuspensionManager.RestoreAsync();
+                }
+                catch (SuspensionManagerException)
+                {
+                    //Something went wrong restoring state. 
+                    //Assume there is no state and continue 
+                }
+            }
+        }
+
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used when the application is launched to open a specific file, to display
@@ -53,64 +102,51 @@ namespace FacebookPhotoUploader
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            Frame rootFrame = CreateRootFrame();
+            await RestoreStatusAsync(e.PreviousExecutionState);
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active.
-            if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page.
-                rootFrame = new Frame();
+            //MainPage is always in rootFrame so we don't have to worry about restoring the navigation state on resume 
+            rootFrame.Navigate(typeof(PivotPage), e.Arguments);
 
-                // Associate the frame with a SuspensionManager key.
-                SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
+            // Ensure the current window is active 
+            Window.Current.Activate();
+        }
 
-                // TODO: Change this value to a cache size that is appropriate for your application.
-                rootFrame.CacheSize = 1;
+        protected override async void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    // Restore the saved session state only when appropriate.
-                    try
-                    {
-                        await SuspensionManager.RestoreAsync();
-                    }
-                    catch (SuspensionManagerException)
-                    {
-                        // Something went wrong restoring state.
-                        // Assume there is no state and continue.
-                    }
-                }
+            ContinuationManager = new ContinuationManager();
 
-                // Place the frame in the current Window.
-                Window.Current.Content = rootFrame;
-            }
+            Frame rootFrame = CreateRootFrame();
+            await RestoreStatusAsync(args.PreviousExecutionState);
 
             if (rootFrame.Content == null)
             {
-                // Removes the turnstile navigation for startup.
-                if (rootFrame.ContentTransitions != null)
-                {
-                    this.transitions = new TransitionCollection();
-                    foreach (var c in rootFrame.ContentTransitions)
-                    {
-                        this.transitions.Add(c);
-                    }
-                }
+                rootFrame.Navigate(typeof(PivotPage));
+            }
 
-                rootFrame.ContentTransitions = null;
-                rootFrame.Navigated += this.RootFrame_FirstNavigated;
+            var continuationEventArgs = args as IContinuationActivatedEventArgs;
+            if (continuationEventArgs != null)
+            {
+                // Call ContinuationManager to handle continuation activation 
+                ContinuationManager.Continue(continuationEventArgs);
+            }
 
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter.
-                if (!rootFrame.Navigate(typeof(PivotPage), e.Arguments))
+            var protocolArgs = args as IProtocolActivatedEventArgs;
+            if (protocolArgs != null)
+            {
+                var keyValues = protocolArgs.Uri.Query.Split('&');
+                foreach (var keyValue in keyValues)
                 {
-                    throw new Exception("Failed to create initial page");
+                    var key = keyValue.Split('=')[0].Replace("?","");
+                    var value = keyValue.Split('=')[1];
+                    var toAdd = new KeyValuePair<string,string>(key,value);
+                    SettingsService ss = new SettingsService();
+                    await ss.AddToStoreAsync(toAdd);
                 }
             }
 
-            // Ensure the current window is active.
             Window.Current.Activate();
         }
 
