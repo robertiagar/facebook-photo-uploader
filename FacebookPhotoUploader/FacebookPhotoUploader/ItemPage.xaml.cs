@@ -1,5 +1,7 @@
 ﻿using FacebookPhotoUploader.Common;
 using FacebookPhotoUploader.Data;
+using FacebookPhotoUploader.ViewModel;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +29,7 @@ namespace FacebookPhotoUploader
     public sealed partial class ItemPage : Page
     {
         private readonly NavigationHelper navigationHelper;
-        private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly AlbumViewModel defaultViewModel;
 
         public ItemPage()
         {
@@ -36,6 +38,8 @@ namespace FacebookPhotoUploader
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            this.defaultViewModel = ServiceLocator.Current.GetInstance<AlbumViewModel>();
         } 
 
         /// <summary>
@@ -50,7 +54,7 @@ namespace FacebookPhotoUploader
         /// Gets the view model for this <see cref="Page"/>.
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel
+        public AlbumViewModel DefaultViewModel
         {
             get { return this.defaultViewModel; }
         }
@@ -69,8 +73,7 @@ namespace FacebookPhotoUploader
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data.
-            var item = await SampleDataSource.GetItemAsync((string)e.NavigationParameter);
-            this.DefaultViewModel["Item"] = item;
+            await defaultViewModel.GetAlbum((string)e.NavigationParameter);
         }
 
         /// <summary>

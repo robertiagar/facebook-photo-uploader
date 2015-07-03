@@ -13,10 +13,13 @@ namespace FacebookPhotoUploader.API.Interfaces
 {
     public interface IFacebookService
     {
-        Task<bool> Login();
-        Task<bool> Logout();
+        Task LoginAsync();
+        Task<bool> LogoutAsync();
         Task UploadFotoAsync(IStorageFile file, Action<UploadOperation> progressAction, Photo photo, CancellationToken cancellationToken, IProgress<Facebook.FacebookUploadProgressChangedEventArgs> progress);
         Task<IEnumerable<Album>> GetAlbumsAsync();
+        Task<Album> GetAlbumAsync(string albumId);
         Task<bool> CreateAlbumAsync(Album album);
+        Task<string> GetUserIdAsync();
+        Task<bool> IsLoggedInAsync();
     }
 }

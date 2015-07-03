@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:FacebookPhotoUploader.Data"
     mc:Ignorable="d"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    DataContext="{Binding Main, Source={StaticResource Locator}}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Transitions>
         <TransitionCollection>
@@ -26,46 +26,60 @@
                 x:Uid="PivotItem1"
                 Margin="19,14.5,0,0"
                 Header="first"
-                DataContext="{Binding FirstGroup}"
-                d:DataContext="{Binding Groups[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"
                 CommonNavigationTransitionInfo.IsStaggerElement="True">
                 <!--Double line list with text wrapping-->
                 <ListView
-                    ItemsSource="{Binding Items}"
+                    ItemsSource="{Binding Albums}"
                     IsItemClickEnabled="True"
                     ItemClick="ItemView_ItemClick"
                     ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0,0,0,9.5">
-                                <TextBlock
-                                    Text="{Binding Title}"
-                                    TextWrapping="Wrap"
-                                    Pivot.SlideInAnimationGroup="1"
-                                    CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                    Style="{ThemeResource ListViewItemTextBlockStyle}"
-                                    Margin="0,0,19,0"/>
-                                <TextBlock
-                                    Text="{Binding Description}"
-                                    TextWrapping="WrapWholeWords"
-                                    Pivot.SlideInAnimationGroup="2" 
-                                    CommonNavigationTransitionInfo.IsStaggerElement="True" 
-                                    Style="{ThemeResource ListViewItemContentTextBlockStyle}"
-                                    Margin="0,0,19,0"/>
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding CoverPhotoLink}" Width="100"/>
+                                <StackPanel Margin="19,0,0,9.5" Grid.Column="1">
+                                    <TextBlock Text="{Binding Name}"
+                                               TextWrapping="Wrap"
+                                               Pivot.SlideInAnimationGroup="1"
+                                               CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                               Style="{ThemeResource ListViewItemTextBlockStyle}"
+                                               Margin="0,0,19,0"/>
+                                    <TextBlock Text="{Binding Description}"
+                                               TextWrapping="WrapWholeWords"
+                                               Pivot.SlideInAnimationGroup="2" 
+                                               CommonNavigationTransitionInfo.IsStaggerElement="True" 
+                                               Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                               Margin="0,0,19,0"/>
+                                    <TextBlock Text="{Binding Created}"
+                                               TextWrapping="WrapWholeWords"
+                                               Pivot.SlideInAnimationGroup="2" 
+                                               CommonNavigationTransitionInfo.IsStaggerElement="True" 
+                                               Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                               Margin="0,0,19,0"/>
+                                    <TextBlock Text="{Binding Updated}"
+                                               TextWrapping="WrapWholeWords"
+                                               Pivot.SlideInAnimationGroup="2" 
+                                               CommonNavigationTransitionInfo.IsStaggerElement="True" 
+                                               Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                               Margin="0,0,19,0"/>
+                                </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </PivotItem>
 
             <!--Pivot item two-->
-            <PivotItem
+            <!--<PivotItem
                 x:Uid="PivotItem2"
                 Margin="19,14.5,0,0"
                 Header="second"
                 DataContext="{Binding SecondGroup}"
                 d:DataContext="{Binding Groups[1], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
-                <!--Double line list no text wrapping-->
                 <ListView
                     ItemsSource="{Binding Items}"
                     IsItemClickEnabled="True"
@@ -89,7 +103,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-            </PivotItem>
+            </PivotItem>-->
         </Pivot>
     </Grid>
 

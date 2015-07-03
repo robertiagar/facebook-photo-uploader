@@ -10,30 +10,36 @@ namespace FacebookPhotoUploader.API.Services
 {
     public class SettingsService : ISettingsService
     {
-        public Task<bool> AddToStoreAsync(KeyValuePair<string, string> keyValuePair)
+        public bool SaveSetting(KeyValuePair<string, string> keyValuePair)
         {
             try
             {
                 var localSettings = ApplicationData.Current.LocalSettings;
                 localSettings.Values[keyValuePair.Key] = keyValuePair.Value;
-                return Task.FromResult<bool>(true);
+                return true;
             }
             catch
             {
-                return Task.FromResult<bool>(false);
+                return false;
             }
         }
 
-        public Task<string> GetFromStoreAsync(string key)
+        public string GetSetting(string key)
         {
             var localSettings = ApplicationData.Current.LocalSettings;
             var result = localSettings.Values[key];
             if (result != null)
             {
-                return Task.FromResult<string>(result.ToString());
+                return result.ToString();
             }
 
-            return Task.FromResult<string>(null);
+            return null;
+        }
+
+
+        public bool SaveSetting(string key, string value)
+        {
+            return SaveSetting(new KeyValuePair<string, string>(key, value));
         }
     }
 }

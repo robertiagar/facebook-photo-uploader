@@ -1,8 +1,10 @@
 ﻿using Facebook;
+using FacebookPhotoUploader.API.Interfaces;
 using FacebookPhotoUploader.API.Models;
-using FacebookPhotoUploader.API.Services;
 using FacebookPhotoUploader.Common;
 using FacebookPhotoUploader.Data;
+using FacebookPhotoUploader.ViewModel;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,7 +40,7 @@ namespace FacebookPhotoUploader
         private const string SecondGroupName = "SecondGroup";
 
         private readonly NavigationHelper navigationHelper;
-        private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly MainViewModel defaultViewModel;
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         private CancellationTokenSource cts;
@@ -60,6 +62,7 @@ namespace FacebookPhotoUploader
 
             Current = this;
             statusBar = StatusBar.GetForCurrentView();
+            defaultViewModel = ServiceLocator.Current.GetInstance<MainViewModel>();
         }
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace FacebookPhotoUploader
         /// Gets the view model for this <see cref="Page"/>.
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel
+        public MainViewModel DefaultViewModel
         {
             get { return this.defaultViewModel; }
         }
@@ -93,14 +96,7 @@ namespace FacebookPhotoUploader
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-1");
-            this.DefaultViewModel[FirstGroupName] = sampleDataGroup;
-
-            var fbService = new FacebookService();
-            var settingsService = new SettingsService();
-            fbService.SetSettingsService(settingsService);
-
-            await fbService.Login();
+            await defaultViewModel.GetAlbumsAsync();
         }
 
         /// <summary>
@@ -121,23 +117,23 @@ namespace FacebookPhotoUploader
         /// </summary>
         private void AddAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            string groupName = this.pivot.SelectedIndex == 0 ? FirstGroupName : SecondGroupName;
-            var group = this.DefaultViewModel[groupName] as SampleDataGroup;
-            var nextItemId = group.Items.Count + 1;
-            var newItem = new SampleDataItem(
-                string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextItemId),
-                string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextItemId),
-                string.Empty,
-                string.Empty,
-                this.resourceLoader.GetString("NewItemDescription"),
-                string.Empty);
+            //string groupName = this.pivot.SelectedIndex == 0 ? FirstGroupName : SecondGroupName;
+            //var group = this.DefaultViewModel[groupName] as SampleDataGroup;
+            //var nextItemId = group.Items.Count + 1;
+            //var newItem = new SampleDataItem(
+            //    string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextItemId),
+            //    string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextItemId),
+            //    string.Empty,
+            //    string.Empty,
+            //    this.resourceLoader.GetString("NewItemDescription"),
+            //    string.Empty);
 
-            group.Items.Add(newItem);
+            //group.Items.Add(newItem);
 
-            // Scroll the new item into view.
-            var container = this.pivot.ContainerFromIndex(this.pivot.SelectedIndex) as ContentControl;
-            var listView = container.ContentTemplateRoot as ListView;
-            listView.ScrollIntoView(newItem, ScrollIntoViewAlignment.Leading);
+            //// Scroll the new item into view.
+            //var container = this.pivot.ContainerFromIndex(this.pivot.SelectedIndex) as ContentControl;
+            //var listView = container.ContentTemplateRoot as ListView;
+            //listView.ScrollIntoView(newItem, ScrollIntoViewAlignment.Leading);
         }
 
         /// <summary>
@@ -147,7 +143,7 @@ namespace FacebookPhotoUploader
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
+            var itemId = ((Album)e.ClickedItem).Id;
             if (!Frame.Navigate(typeof(ItemPage), itemId))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
@@ -157,10 +153,10 @@ namespace FacebookPhotoUploader
         /// <summary>
         /// Loads the content for the second pivot item when it is scrolled into view.
         /// </summary>
-        private async void SecondPivot_Loaded(object sender, RoutedEventArgs e)
+        private void SecondPivot_Loaded(object sender, RoutedEventArgs e)
         {
-            var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-2");
-            this.DefaultViewModel[SecondGroupName] = sampleDataGroup;
+            //var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-2");
+            //this.DefaultViewModel[SecondGroupName] = sampleDataGroup;
         }
 
         #region NavigationHelper registration
@@ -207,11 +203,9 @@ namespace FacebookPhotoUploader
             if (args.Files.Count > 0)
             {
                 var file = args.Files[0];
-                var fbService = new FacebookService();
-                var settingsService = new SettingsService();
-                fbService.SetSettingsService(settingsService);
+                var fbService = ServiceLocator.Current.GetInstance<IFacebookService>();
 
-                await fbService.Login();
+                await fbService.LoginAsync();
                 await statusBar.ShowAsync();
                 await statusBar.ProgressIndicator.ShowAsync();
                 await fbService.UploadFotoAsync(file, null, new Photo { Caption = "test", Place = null, Tags = null }, cts.Token, this);
@@ -235,10 +229,8 @@ namespace FacebookPhotoUploader
 
         private async void SecondaryButton2_Click(object sender, RoutedEventArgs e)
         {
-            var fbService = new FacebookService();
-            var settingsService = new SettingsService();
-            fbService.SetSettingsService(settingsService);
-            await fbService.Logout();
+            var fbService = ServiceLocator.Current.GetInstance<IFacebookService>();
+            await fbService.LogoutAsync();
         }
     }
 }

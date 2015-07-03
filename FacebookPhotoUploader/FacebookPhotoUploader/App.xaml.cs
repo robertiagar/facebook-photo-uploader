@@ -143,7 +143,7 @@ namespace FacebookPhotoUploader
                     var value = keyValue.Split('=')[1];
                     var toAdd = new KeyValuePair<string,string>(key,value);
                     SettingsService ss = new SettingsService();
-                    await ss.AddToStoreAsync(toAdd);
+                    ss.SaveSetting(toAdd);
                 }
             }
 

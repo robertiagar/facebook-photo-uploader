@@ -8,7 +8,8 @@ namespace FacebookPhotoUploader.API.Interfaces
 {
     public interface ISettingsService
     {
-        Task<bool> AddToStoreAsync(KeyValuePair<string, string> keyValuePair);
-        Task<string> GetFromStoreAsync(string key);
+        bool SaveSetting(KeyValuePair<string, string> keyValuePair);
+        bool SaveSetting(string key, string value);
+        string GetSetting(string key);
     }
 }

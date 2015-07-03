@@ -27,9 +27,9 @@ namespace FacebookPhotoUploader.API.Services
         const string graphApi = "https://graph.facebook.com/v2.3/";
         FacebookClient client;
 
-        private SettingsService settingService;
+        private ISettingsService settingsService;
 
-        public FacebookService()
+        public FacebookService(ISettingsService settingsService)
         {
             AsyncOAuth.OAuthUtility.ComputeHash = (key, buffer) =>
             {
@@ -52,18 +52,18 @@ namespace FacebookPhotoUploader.API.Services
             };
 
             client = new FacebookClient();
+            this.settingsService = settingsService;
         }
 
-        public async Task<bool> Login()
+        public async Task LoginAsync()
         {
-            string accessToken = await settingService.GetFromStoreAsync("access_token");
+            string accessToken = settingsService.GetSetting("access_token");
+            string userId = settingsService.GetSetting("id");
             if (string.IsNullOrEmpty(accessToken))
             {
                 var uri = string.Format(@"fbconnect://authorize?client_id={0}&scope=user_photos,publish_actions&redirect_uri=msft-{1}://authorize", appId, ProductId);
 
                 var result = await Launcher.LaunchUriAsync(new Uri(uri));
-
-                return result;
             }
 
             else
@@ -72,19 +72,51 @@ namespace FacebookPhotoUploader.API.Services
                 client.AppId = appId;
                 client.AppSecret = appSecret;
                 client.Version = "v2.3";
-                return true;
+                userId = await GetUserIdAsync();
+                SaveUserI(userId);
             }
         }
 
-        public async Task<dynamic> GetAsync()
+        public bool SaveUserI(string userId)
         {
-            var obj = await client.GetTaskAsync("/me");
-            return obj;
+            return settingsService.SaveSetting(new KeyValuePair<string, string>("id", userId));
         }
 
-        public Task<bool> Logout()
+        public async Task<string> GetUserIdAsync()
         {
-            return settingService.AddToStoreAsync(new KeyValuePair<string, string>("access_token", ""));
+            dynamic result = await client.GetTaskAsync("/me");
+            if (result != null)
+            {
+                if (result.id != null)
+                {
+                    return result.id.ToString();
+                }
+            }
+            return string.Empty;
+        }
+
+        public async Task<bool> LogoutAsync()
+        {
+            var userdId = settingsService.GetSetting("id");
+            var access_token = settingsService.GetSetting("access_token");
+            if (userdId != null)
+            {
+                var url = string.Format("/{0}/permissions", userdId);
+                dynamic result = await client.DeleteTaskAsync(url);
+
+                if (result.success != null)
+                {
+                    var success = (bool)result.success;
+                    if (success)
+                    {
+                        settingsService.SaveSetting("id", "");
+                        settingsService.SaveSetting("access_token", "");
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public async Task UploadFotoAsync(IStorageFile file, Action<UploadOperation> progressAction, Photo photo, CancellationToken cancellationToken, IProgress<FacebookUploadProgressChangedEventArgs> progress)
@@ -119,9 +151,57 @@ namespace FacebookPhotoUploader.API.Services
             return fileBytes;
         }
 
-        public Task<IEnumerable<Album>> GetAlbumsAsync()
+        public async Task<IEnumerable<Album>> GetAlbumsAsync()
         {
-            throw new NotImplementedException();
+            var url = string.Format("/{0}/albums", settingsService.GetSetting("id"));
+            var result = new List<Album>();
+            dynamic albums = await client.GetTaskAsync(url);
+            if (albums != null)
+            {
+                if (albums.data != null)
+                {
+                    foreach (dynamic album in albums.data)
+                    {
+                        var alb = new Album(album);
+                        if (album.cover_photo != null)
+                        {
+                            var imageResult = await client.GetTaskAsync(album.cover_photo.ToString());
+                            if (imageResult.images != null)
+                            {
+                                var images = imageResult.images as List<dynamic>;
+                                dynamic image = images.Where(i => i.height == 225).SingleOrDefault();
+                                if (image != null)
+                                {
+                                    alb.CoverPhotoLink = image.source;
+                                }
+                            }
+                        }
+
+                        result.Add(alb);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<Album> GetAlbumAsync(string albumId)
+        {
+            var url = string.Format("/{0}",albumId);
+            dynamic result = await client.GetTaskAsync(url);
+            var album = new Album(result);
+
+            result = await client.GetTaskAsync(url + "/photos");
+
+            if (result.data != null)
+            {
+                foreach (dynamic image in result.data)
+                {
+                    var photo = new Photo(image);
+                    album.AddPhoto(photo);
+                }
+            }
+            return album;
         }
 
         public Task<bool> CreateAlbumAsync(Album album)
@@ -129,18 +209,24 @@ namespace FacebookPhotoUploader.API.Services
             throw new NotImplementedException();
         }
 
-        public void SetSettingsService(SettingsService settingsService)
+        public async Task<bool> IsLoggedInAsync()
         {
-            this.settingService = settingsService;
-        }
-
-        public async void Report(FacebookUploadProgressChangedEventArgs value)
-        {
-            var dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            string accessToken = settingsService.GetSetting("access_token");
+            string userId = settingsService.GetSetting("id");
+            if (string.IsNullOrEmpty(accessToken))
             {
-
-            });
+                return false;
+            }
+            else
+            {
+                client.AccessToken = accessToken;
+                client.AppId = appId;
+                client.AppSecret = appSecret;
+                client.Version = "v2.3";
+                userId = await GetUserIdAsync();
+                SaveUserI(userId);
+                return true;
+            }
         }
     }
 }
