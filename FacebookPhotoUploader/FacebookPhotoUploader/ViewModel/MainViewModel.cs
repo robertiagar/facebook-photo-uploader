@@ -37,9 +37,99 @@ namespace FacebookPhotoUploader.ViewModel
                     Description = "Album 2 Description",
                     Created = DateTime.Now.AddDays(-30),
                     Updated = DateTime.Now,
+                    CoverPhotoLink = "Assets/LightGray.png"
+                });
+                _albums.Add(new Album()
+                {
+                    Id = "4323424",
+                    Name = "Album 1",
+                    Description = "Album 1 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "Assets/LightGray.png"
+                });
+
+                _albums.Add(new Album()
+                {
+                    Id = "4323321424",
+                    Name = "Album 2",
+                    Description = "Album 2 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                }); _albums.Add(new Album()
+                {
+                    Id = "4323424",
+                    Name = "Album 1",
+                    Description = "Album 1 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
                     CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
                 });
 
+                _albums.Add(new Album()
+                {
+                    Id = "4323321424",
+                    Name = "Album 2",
+                    Description = "Album 2 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                }); _albums.Add(new Album()
+                {
+                    Id = "4323424",
+                    Name = "Album 1",
+                    Description = "Album 1 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                });
+
+                _albums.Add(new Album()
+                {
+                    Id = "4323321424",
+                    Name = "Album 2",
+                    Description = "Album 2 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                }); _albums.Add(new Album()
+                {
+                    Id = "4323424",
+                    Name = "Album 1",
+                    Description = "Album 1 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                });
+
+                _albums.Add(new Album()
+                {
+                    Id = "4323321424",
+                    Name = "Album 2",
+                    Description = "Album 2 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "Assets/LightGray.png"
+                }); _albums.Add(new Album()
+                {
+                    Id = "4323424",
+                    Name = "Album 1",
+                    Description = "Album 1 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                });
+
+                _albums.Add(new Album()
+                {
+                    Id = "4323321424",
+                    Name = "Album 2",
+                    Description = "Album 2 Description",
+                    Created = DateTime.Now.AddDays(-30),
+                    Updated = DateTime.Now,
+                    CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
+                });
             }
         }
 

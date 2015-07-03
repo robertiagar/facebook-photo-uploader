@@ -174,6 +174,10 @@ namespace FacebookPhotoUploader.API.Services
                                 {
                                     alb.CoverPhotoLink = image.source;
                                 }
+                                else
+                                {
+                                    alb.CoverPhotoLink = "Assets/LightGray.png";
+                                }
                             }
                         }
 

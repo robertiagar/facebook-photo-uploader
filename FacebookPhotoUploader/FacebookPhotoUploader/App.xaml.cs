@@ -106,7 +106,7 @@ namespace FacebookPhotoUploader
             await RestoreStatusAsync(e.PreviousExecutionState);
 
             //MainPage is always in rootFrame so we don't have to worry about restoring the navigation state on resume 
-            rootFrame.Navigate(typeof(PivotPage), e.Arguments);
+            rootFrame.Navigate(typeof(HubPage), e.Arguments);
 
             // Ensure the current window is active 
             Window.Current.Activate();
@@ -123,7 +123,7 @@ namespace FacebookPhotoUploader
 
             if (rootFrame.Content == null)
             {
-                rootFrame.Navigate(typeof(PivotPage));
+                rootFrame.Navigate(typeof(HubPage));
             }
 
             var continuationEventArgs = args as IContinuationActivatedEventArgs;

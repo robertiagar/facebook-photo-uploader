@@ -34,11 +34,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace FacebookPhotoUploader
 {
-    public sealed partial class PivotPage : Page, IFileOpenPickerContinuable, IProgress<FacebookUploadProgressChangedEventArgs>
+    public sealed partial class HubPage : Page, IFileOpenPickerContinuable, IProgress<FacebookUploadProgressChangedEventArgs>
     {
-        private const string FirstGroupName = "FirstGroup";
-        private const string SecondGroupName = "SecondGroup";
-
         private readonly NavigationHelper navigationHelper;
         private readonly MainViewModel defaultViewModel;
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
@@ -46,9 +43,9 @@ namespace FacebookPhotoUploader
         private CancellationTokenSource cts;
         private StatusBar statusBar;
 
-        public static PivotPage Current;
+        public static HubPage Current;
 
-        public PivotPage()
+        public HubPage()
         {
             this.InitializeComponent();
 
