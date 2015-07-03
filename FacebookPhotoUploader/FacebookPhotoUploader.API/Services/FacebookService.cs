@@ -3,6 +3,7 @@ using Facebook;
 using FacebookPhotoUploader.API.Interfaces;
 using FacebookPhotoUploader.API.Models;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -119,20 +120,24 @@ namespace FacebookPhotoUploader.API.Services
             return false;
         }
 
-        public async Task UploadFotoAsync(IStorageFile file, Action<UploadOperation> progressAction, Photo photo, CancellationToken cancellationToken, IProgress<FacebookUploadProgressChangedEventArgs> progress)
+        public async Task UploadPhotoAsync(IStorageFile file, Photo photo, CancellationToken cancellationToken, IProgress<FacebookUploadProgressChangedEventArgs> progress)
         {
-            var image = new FacebookMediaObject();
-            image.ContentType = "image/jpg";
-            image.FileName = file.Name;
-            byte[] fileBytes = await GetFileBytes(file);
-            image.SetValue(fileBytes);
+            var str = await file.OpenReadAsync();
+            var stream = str.AsStream();
 
-            var postInfo = new Dictionary<string, object>();
-            postInfo.Add("message", photo.Caption);
-            postInfo.Add("image", image);
+            using (var imageStream = new FacebookMediaStream()
+            {
+                ContentType = "image/jpeg",
+                FileName = file.Name
+            }.SetValue(stream))
+            {
 
+                var postInfo = new Dictionary<string, object>();
+                postInfo.Add("message", photo.Caption);
+                postInfo.Add("file", imageStream);
 
-            var fbResult = await client.PostTaskAsync("/photos", postInfo, null, cancellationToken, progress);
+                var fbResult = await client.PostTaskAsync("/photos", postInfo, null, cancellationToken, progress);
+            }
         }
 
         private static async Task<byte[]> GetFileBytes(IStorageFile file)
@@ -191,7 +196,7 @@ namespace FacebookPhotoUploader.API.Services
 
         public async Task<Album> GetAlbumAsync(string albumId)
         {
-            var url = string.Format("/{0}",albumId);
+            var url = string.Format("/{0}", albumId);
             dynamic result = await client.GetTaskAsync(url);
             var album = new Album(result);
 
