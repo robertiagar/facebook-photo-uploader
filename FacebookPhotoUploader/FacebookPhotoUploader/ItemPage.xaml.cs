@@ -26,7 +26,7 @@ namespace FacebookPhotoUploader
     /// <summary>
     /// A page that displays details for a single item within a group.
     /// </summary>
-    public sealed partial class ItemPage : Page
+    public sealed partial class ItemPage : Page, IFileOpenPickerContinuable
     {
         private readonly NavigationHelper navigationHelper;
         private readonly AlbumViewModel defaultViewModel;
@@ -115,5 +115,17 @@ namespace FacebookPhotoUploader
         }
 
         #endregion
+
+        public async void ContinueFileOpenPicker(Windows.ApplicationModel.Activation.FileOpenPickerContinuationEventArgs args)
+        {
+            if (args.Files.Count > 0)
+            {
+                var file = args.Files[0];
+                await defaultViewModel.UploadPhotoAsync(file);
+            }
+            else
+            {
+            }
+        }
     }
 }

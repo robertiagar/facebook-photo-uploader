@@ -12,18 +12,6 @@
         <DataTemplate x:Key="HubSectionHeaderTemplate">
             <TextBlock Margin="0,0,0,-9.5" Text="{Binding}"/>
         </DataTemplate>
-
-        <!-- Grid-appropriate item template as seen in section 2 -->
-        <DataTemplate x:Key="Standard200x180TileItemTemplate">
-            <Grid Margin="0,0,9.5,9.5" Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                <Image Source="{Binding CoverPhotoLink}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Name}" Height="138.5" Width="138.5"/>
-                <StackPanel VerticalAlignment="Bottom" Background="Black" Opacity=".75">
-                    <StackPanel VerticalAlignment="Bottom" Margin="9.5,0,0,6.5" >
-                        <TextBlock Text="{Binding Name}" Style="{ThemeResource BaseTextBlockStyle}" />
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot">
@@ -32,7 +20,7 @@
                          HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <GridView
-                        Margin="0,9.5,0,0"
+                        Margin="0,9.5,0,9.5"
                         ItemsSource="{Binding Albums}"
                         AutomationProperties.AutomationId="ItemGridView"
                         AutomationProperties.Name="Items In Group"
@@ -51,4 +39,9 @@
             </HubSection>
         </Hub>
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Add" Label="add album"></AppBarButton>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>

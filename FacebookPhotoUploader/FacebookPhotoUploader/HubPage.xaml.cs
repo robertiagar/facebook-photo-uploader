@@ -34,7 +34,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace FacebookPhotoUploader
 {
-    public sealed partial class HubPage : Page, IFileOpenPickerContinuable, IProgress<FacebookUploadProgressChangedEventArgs>
+    public sealed partial class HubPage : Page
     {
         private readonly NavigationHelper navigationHelper;
         private readonly MainViewModel defaultViewModel;
@@ -185,43 +185,7 @@ namespace FacebookPhotoUploader
 
         private void SecondaryButton1_Click(object sender, RoutedEventArgs e)
         {
-            FileOpenPicker opener = new FileOpenPicker();
-            opener.ViewMode = PickerViewMode.Thumbnail;
-            opener.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            opener.FileTypeFilter.Add(".jpg");
-            opener.FileTypeFilter.Add(".jpeg");
-            opener.FileTypeFilter.Add(".png");
-
-            opener.PickSingleFileAndContinue();
-        }
-
-        public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
-        {
-            if (args.Files.Count > 0)
-            {
-                var file = args.Files[0];
-                var fbService = ServiceLocator.Current.GetInstance<IFacebookService>();
-
-                await fbService.LoginAsync();
-                await statusBar.ShowAsync();
-                await statusBar.ProgressIndicator.ShowAsync();
-                await fbService.UploadFotoAsync(file, null, new Photo { Caption = "test", Place = null, Tags = null }, cts.Token, this);
-            }
-            else
-            {
-            }
-        }
-
-        public async void Report(FacebookUploadProgressChangedEventArgs value)
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,async () =>
-            {
-                statusBar.ProgressIndicator.ProgressValue = (float)value.ProgressPercentage / 100;
-                if (value.ProgressPercentage == 100)
-                {
-                    await statusBar.ProgressIndicator.HideAsync();
-                }
-            });
+           
         }
 
         private async void SecondaryButton2_Click(object sender, RoutedEventArgs e)

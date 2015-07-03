@@ -15,7 +15,7 @@ namespace FacebookPhotoUploader.API.Interfaces
     {
         Task LoginAsync();
         Task<bool> LogoutAsync();
-        Task UploadFotoAsync(IStorageFile file, Action<UploadOperation> progressAction, Photo photo, CancellationToken cancellationToken, IProgress<Facebook.FacebookUploadProgressChangedEventArgs> progress);
+        Task UploadPhotoAsync(IStorageFile file, Photo photo, CancellationToken cancellationToken, IProgress<Facebook.FacebookUploadProgressChangedEventArgs> progress);
         Task<IEnumerable<Album>> GetAlbumsAsync();
         Task<Album> GetAlbumAsync(string albumId);
         Task<bool> CreateAlbumAsync(Album album);

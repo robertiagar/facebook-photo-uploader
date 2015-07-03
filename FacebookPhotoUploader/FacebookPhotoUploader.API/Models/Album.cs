@@ -27,7 +27,7 @@ namespace FacebookPhotoUploader.API.Models
             this.Created = DateTime.Parse(album.created_time);
             this.Updated = DateTime.Parse(album.updated_time);
             this.Description = album.description;
-            this.CoverPhotoLink = string.Empty;
+            this.CoverPhotoLink = "ms-appx:///Assets/LightGray.png";
         }
 
         public void AddPhoto(Photo photo)

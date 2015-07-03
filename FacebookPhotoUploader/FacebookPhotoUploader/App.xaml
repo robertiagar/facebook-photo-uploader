@@ -1,5 +1,21 @@
 <Application x:Class="FacebookPhotoUploader.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:FacebookPhotoUploader">
-  <Application.Resources>
-    <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:FacebookPhotoUploader.ViewModel" />
-  </Application.Resources>
+    <Application.Resources>
+        <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:FacebookPhotoUploader.ViewModel" />
+
+        <DataTemplate x:Key="Standard200x180TileItemTemplate">
+            <Grid Margin="0,0,9.5,9.5" Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
+                <Image Source="{Binding CoverPhotoLink}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Name}" Style="{StaticResource Image125x125}"/>
+                <StackPanel VerticalAlignment="Bottom" Background="Black" Opacity=".75">
+                    <StackPanel VerticalAlignment="Bottom" Margin="9.5,0,0,6.5" >
+                        <TextBlock Text="{Binding Name}" Style="{ThemeResource BaseTextBlockStyle}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        
+        <Style TargetType="Image" x:Key="Image125x125">
+            <Setter Property="Height" Value="125.5"/>
+            <Setter Property="Width" Value="125.5"/>
+        </Style>
+    </Application.Resources>
 </Application>
