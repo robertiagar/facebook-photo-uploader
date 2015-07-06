@@ -10,13 +10,13 @@
 
     <Page.Resources>
         <DataTemplate x:Key="HubSectionHeaderTemplate">
-            <TextBlock Margin="0,0,0,-9.5" Text="{Binding}"/>
+            <TextBlock Margin="0,0,0,-9.5" Text="{Binding PageName}"/>
         </DataTemplate>
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <Hub x:Name="Hub" x:Uid="Hub" Header="application name">
-            <HubSection x:Uid="HubSection2" Header="SECTION 2" Width="Auto"
+        <Hub Header="{Binding ApplicationName}">
+            <HubSection Header="{Binding PageName}" Width="Auto"
                          HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <GridView

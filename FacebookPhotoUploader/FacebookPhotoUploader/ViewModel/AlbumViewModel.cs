@@ -13,7 +13,7 @@ using Windows.Storage.Pickers;
 
 namespace FacebookPhotoUploader.ViewModel
 {
-    public class AlbumViewModel : ViewModelBase, IProgress<Facebook.FacebookUploadProgressChangedEventArgs>
+    public class AlbumViewModel : AppBaseViewModel, IProgress<Facebook.FacebookUploadProgressChangedEventArgs>
     {
         private Album _album;
         private IFacebookService faceboookService;
@@ -31,7 +31,8 @@ namespace FacebookPhotoUploader.ViewModel
 
         public ICommand AddPhotoCommand { get; private set; }
 
-        public AlbumViewModel(IFacebookService facebookService)
+        public AlbumViewModel(IFacebookService facebookService, IStatusService statusService)
+            :base(statusService)
         {
             this.faceboookService = facebookService;
             this.cts = new CancellationTokenSource();
@@ -46,6 +47,23 @@ namespace FacebookPhotoUploader.ViewModel
 
                 opener.PickSingleFileAndContinue();
             });
+
+            this.PageName = ResourceLoader.GetString("PhotosPageName");
+
+            if (this.IsInDesignMode)
+            {
+                this.ApplicationName = "Robert's Photo Uploader";
+                this.PageName = "PHOTOS";
+
+                Album = new Album();
+                Album.AddPhoto(new Photo()
+                {
+                    Id="43jk2h42kj3h4",
+                    Caption="photo 1",
+                    ImageLink="Assets/LighGray.png"
+                });
+                Album.Name = "design album";
+            }
         }
 
         public async Task GetAlbum(string albumId)
@@ -68,6 +86,11 @@ namespace FacebookPhotoUploader.ViewModel
                 };
                 await faceboookService.UploadPhotoAsync(file, photo, cts.Token, this);
             }
+        }
+
+        public override string PageName
+        {
+            get { return Album.Name.ToUpper(); }
         }
 
         public async void Report(Facebook.FacebookUploadProgressChangedEventArgs value)

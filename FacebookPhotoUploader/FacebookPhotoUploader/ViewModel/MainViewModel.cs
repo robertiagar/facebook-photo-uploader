@@ -9,17 +9,23 @@ using System.Threading.Tasks;
 
 namespace FacebookPhotoUploader.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : AppBaseViewModel
     {
         private IFacebookService facebookService;
         private ObservableCollection<Album> _albums;
 
-        public MainViewModel(IFacebookService facebookService)
+        public MainViewModel(IFacebookService facebookService, IStatusService statusService)
+            :base(statusService)
         {
             this.facebookService = facebookService;
             this._albums = new ObservableCollection<Album>();
+            this.PageName = ResourceLoader.GetString("AlbumsHubName");
+
             if (IsInDesignMode)
             {
+                this.ApplicationName = "Robert's Photo Uploader";
+                this.PageName = "ALBUMS";
+
                 _albums.Add(new Album()
                 {
                     Id = "4323424",

@@ -140,22 +140,6 @@ namespace FacebookPhotoUploader.API.Services
             }
         }
 
-        private static async Task<byte[]> GetFileBytes(IStorageFile file)
-        {
-            byte[] fileBytes = null;
-
-            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
-            {
-                fileBytes = new byte[stream.Size];
-                using (DataReader reader = new DataReader(stream))
-                {
-                    await reader.LoadAsync((uint)stream.Size);
-                    reader.ReadBytes(fileBytes);
-                }
-            }
-            return fileBytes;
-        }
-
         public async Task<IEnumerable<Album>> GetAlbumsAsync()
         {
             var url = string.Format("/{0}/albums", settingsService.GetSetting("id"));

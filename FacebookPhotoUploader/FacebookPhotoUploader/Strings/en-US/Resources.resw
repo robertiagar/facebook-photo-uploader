@@ -120,6 +120,12 @@
   <data name="AddAppBarButton.Label" xml:space="preserve">
     <value>add</value>
   </data>
+  <data name="AlbumsHubName" xml:space="preserve">
+    <value>ALBUMS</value>
+  </data>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>robert's photo uploader</value>
+  </data>
   <data name="Header.Text" xml:space="preserve">
     <value>robert's photo uploader</value>
   </data>
@@ -137,6 +143,9 @@
   </data>
   <data name="NewItemTitle" xml:space="preserve">
     <value>Item Title: {0}</value>
+  </data>
+  <data name="PhotosPageName" xml:space="preserve">
+    <value>PHOTOS</value>
   </data>
   <data name="PivotItem2.Header" xml:space="preserve">
     <value>SECOND</value>

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacebookPhotoUploader", "Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacebookPhotoUploader.API", "FacebookPhotoUploader.API\FacebookPhotoUploader.API.csproj", "{2CEEE626-6A37-4AB1-A343-AA089FAB4C03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacebookPhotoUploader.BackgroundTasks", "FacebookPhotoUploader.BackgroundTasks\FacebookPhotoUploader.BackgroundTasks.csproj", "{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,14 @@ Global
 		{2CEEE626-6A37-4AB1-A343-AA089FAB4C03}.Release|ARM.Build.0 = Release|ARM
 		{2CEEE626-6A37-4AB1-A343-AA089FAB4C03}.Release|x86.ActiveCfg = Release|x86
 		{2CEEE626-6A37-4AB1-A343-AA089FAB4C03}.Release|x86.Build.0 = Release|x86
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Release|ARM.ActiveCfg = Release|Any CPU
+		{07E21BD3-3CC7-4ACB-B9A8-A8312F560F34}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

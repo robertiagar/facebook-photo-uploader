@@ -48,6 +48,12 @@ namespace FacebookPhotoUploader.ViewModel
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ISettingsService,SettingsService>();
             SimpleIoc.Default.Register<IFacebookService, FacebookService>();
+            
+            //No existing class that implements this service exists. For Now...
+            SimpleIoc.Default.Register<IStatusService>(() =>
+            {
+                return null;
+            });
         }
 
         public MainViewModel Main
@@ -65,7 +71,7 @@ namespace FacebookPhotoUploader.ViewModel
                 return ServiceLocator.Current.GetInstance<AlbumViewModel>();
             }
         }
-        
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
