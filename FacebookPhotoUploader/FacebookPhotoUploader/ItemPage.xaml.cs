@@ -40,7 +40,7 @@ namespace FacebookPhotoUploader
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
             this.defaultViewModel = ServiceLocator.Current.GetInstance<AlbumViewModel>();
-        } 
+        }
 
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
@@ -118,13 +118,14 @@ namespace FacebookPhotoUploader
 
         public async void ContinueFileOpenPicker(Windows.ApplicationModel.Activation.FileOpenPickerContinuationEventArgs args)
         {
-            if (args.Files.Count > 0)
+            if (args.Files.Count > 0 && args.Files.Count == 1)
             {
                 var file = args.Files[0];
                 await defaultViewModel.UploadPhotoAsync(file);
             }
-            else
+            else if (args.Files.Count > 0)
             {
+                await defaultViewModel.UploadPhotoAsync(args.Files);
             }
         }
     }

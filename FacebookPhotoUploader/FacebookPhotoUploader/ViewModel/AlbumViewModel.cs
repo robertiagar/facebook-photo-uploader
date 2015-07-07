@@ -88,6 +88,16 @@ namespace FacebookPhotoUploader.ViewModel
                 await faceboookService.UploadPhotoAsync(file, photo, cts.Token, this);
             }
         }
+        public async Task UploadPhotoAsync(IEnumerable<Windows.Storage.StorageFile> files)
+        {
+            var tasks = new List<Task>();
+            foreach (var file in files)
+            {
+                tasks.Add(UploadPhotoAsync(file));
+            }
+
+            await Task.WhenAll(tasks);
+        }
 
         public override string PageName
         {
