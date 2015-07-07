@@ -1,4 +1,5 @@
-﻿using FacebookPhotoUploader.API.Interfaces;
+﻿using Facebook;
+using FacebookPhotoUploader.API.Interfaces;
 using FacebookPhotoUploader.API.Models;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -13,7 +14,7 @@ using Windows.Storage.Pickers;
 
 namespace FacebookPhotoUploader.ViewModel
 {
-    public class AlbumViewModel : AppBaseViewModel, IProgress<Facebook.FacebookUploadProgressChangedEventArgs>
+    public class AlbumViewModel : AppBaseViewModel, IProgress<FacebookUploadProgressChangedEventArgs>
     {
         private Album _album;
         private IFacebookService faceboookService;
@@ -72,7 +73,7 @@ namespace FacebookPhotoUploader.ViewModel
             Album = album;
         }
 
-        internal async Task UploadPhotoAsync(Windows.Storage.StorageFile file)
+        public async Task UploadPhotoAsync(Windows.Storage.StorageFile file)
         {
             var dialog = new PhotoCaption();
             await dialog.SetImageAsync(file);

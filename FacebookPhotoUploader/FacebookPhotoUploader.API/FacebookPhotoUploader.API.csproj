@@ -93,14 +93,8 @@
     <Compile Include="Services\StatusBarService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AsyncOAuth">
-      <HintPath>..\packages\AsyncOAuth.0.8.4\lib\AsyncOAuth.dll</HintPath>
-    </Reference>
     <Reference Include="Facebook">
       <HintPath>..\packages\Facebook.7.0.6\lib\portable-win81+wpa81\Facebook.dll</HintPath>
-    </Reference>
-    <Reference Include="Facebook.Client">
-      <HintPath>..\packages\Facebook.Client.1.0.4\lib\wpa81\Facebook.Client.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using Facebook;
-using FacebookPhotoUploader.API.Interfaces;
+﻿using FacebookPhotoUploader.API.Interfaces;
 using FacebookPhotoUploader.API.Models;
 using FacebookPhotoUploader.Common;
 using FacebookPhotoUploader.Data;

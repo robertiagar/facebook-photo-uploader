@@ -1,5 +1,4 @@
-﻿using AsyncOAuth;
-using Facebook;
+﻿using Facebook;
 using FacebookPhotoUploader.API.Interfaces;
 using FacebookPhotoUploader.API.Models;
 using System;
@@ -25,33 +24,12 @@ namespace FacebookPhotoUploader.API.Services
         const string appId = "1656516901244654";
         const string ProductId = "2f567fdc7cd24adfa9464dc3eed894e1";
         const string appSecret = "e23f848ba6cb89deaa421c99a4d7a664";
-        const string graphApi = "https://graph.facebook.com/v2.3/";
         FacebookClient client;
 
         private ISettingsService settingsService;
 
         public FacebookService(ISettingsService settingsService)
         {
-            AsyncOAuth.OAuthUtility.ComputeHash = (key, buffer) =>
-            {
-                var crypt = Windows.Security.Cryptography.Core.MacAlgorithmProvider.OpenAlgorithm("HMAC_SHA1");
-
-                var keyBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(key);
-
-                var cryptKey = crypt.CreateKey(keyBuffer);
-
-
-                var dataBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(buffer);
-
-                var signBuffer = Windows.Security.Cryptography.Core.CryptographicEngine.Sign(cryptKey, dataBuffer);
-
-                byte[] value;
-
-                Windows.Security.Cryptography.CryptographicBuffer.CopyToByteArray(signBuffer, out value);
-
-                return value;
-            };
-
             client = new FacebookClient();
             this.settingsService = settingsService;
         }
