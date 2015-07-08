@@ -81,7 +81,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IFacebookService.cs" />
-    <Compile Include="Interfaces\StatusService.cs" />
+    <Compile Include="Interfaces\IStatusService.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Place.cs" />
