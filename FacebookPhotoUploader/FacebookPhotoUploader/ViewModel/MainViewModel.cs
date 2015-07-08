@@ -15,12 +15,13 @@ namespace FacebookPhotoUploader.ViewModel
         private ObservableCollection<Album> _albums;
 
         public MainViewModel(IFacebookService facebookService, IStatusService statusService)
-            :base(statusService)
+            : base(statusService)
         {
             this.facebookService = facebookService;
             this._albums = new ObservableCollection<Album>();
             this.PageName = ResourceLoader.GetString("AlbumsHubName");
 
+            #region Design Time data
             if (IsInDesignMode)
             {
                 this.ApplicationName = "Robert's Photo Uploader";
@@ -137,16 +138,20 @@ namespace FacebookPhotoUploader.ViewModel
                     CoverPhotoLink = "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/p75x225/1471789_708303299189111_54080471_n.jpg?oh=783ea12a742de6405af54b46b77201ae&oe=56125BA2"
                 });
             }
+            #endregion
         }
 
-        public async Task GetAlbumsAsync()
+        public async Task SetAlbumsAsync()
         {
             if (await facebookService.IsLoggedInAsync())
             {
                 var albums = await facebookService.GetAlbumsAsync();
-                foreach (var album in albums)
+                if (albums != null)
                 {
-                    AddAlbum(album);
+                    foreach (var album in albums)
+                    {
+                        AddAlbum(album);
+                    }
                 }
             }
             else

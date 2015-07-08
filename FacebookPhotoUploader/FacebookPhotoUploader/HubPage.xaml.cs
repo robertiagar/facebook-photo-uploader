@@ -92,7 +92,7 @@ namespace FacebookPhotoUploader
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            await defaultViewModel.GetAlbumsAsync();
+            await defaultViewModel.SetAlbumsAsync();
         }
 
         /// <summary>

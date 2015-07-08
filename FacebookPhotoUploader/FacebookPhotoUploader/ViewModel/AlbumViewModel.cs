@@ -67,10 +67,10 @@ namespace FacebookPhotoUploader.ViewModel
             }
         }
 
-        public async Task GetAlbum(string albumId)
+        public async Task<Album> GetAlbumAsync(string albumId)
         {
             var album = await faceboookService.GetAlbumAsync(albumId);
-            Album = album;
+            return album;
         }
 
         public async Task UploadPhotoAsync(Windows.Storage.StorageFile file)

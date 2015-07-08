@@ -105,6 +105,19 @@ namespace FacebookPhotoUploader
             Frame rootFrame = CreateRootFrame();
             await RestoreStatusAsync(e.PreviousExecutionState);
 
+            // Removes the turnstile navigation for startup.
+            if (rootFrame.ContentTransitions != null)
+            {
+                this.transitions = new TransitionCollection();
+                foreach (var c in rootFrame.ContentTransitions)
+                {
+                    this.transitions.Add(c);
+                }
+            }
+
+            rootFrame.ContentTransitions = null;
+            rootFrame.Navigated += this.RootFrame_FirstNavigated;
+
             //MainPage is always in rootFrame so we don't have to worry about restoring the navigation state on resume 
             rootFrame.Navigate(typeof(HubPage), e.Arguments);
 
