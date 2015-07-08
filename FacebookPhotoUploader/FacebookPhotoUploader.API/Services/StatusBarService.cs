@@ -70,4 +70,43 @@ namespace FacebookPhotoUploader.API.Services
     //        statusBar.ProgressIndicator.Text = message;
     //    }
     //}
+
+    public class StatusService : IStatusService
+    {
+
+        public void DisplayMessage(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisplayMessage(string message, bool displayProgressBar = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DisplayMessage(string message, int delay)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DisplayMessage(string messsage, int delay, bool displayProgressBar = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisplayProgress(double? progress, string message = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task HideProgressAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ShowProgressAsync()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

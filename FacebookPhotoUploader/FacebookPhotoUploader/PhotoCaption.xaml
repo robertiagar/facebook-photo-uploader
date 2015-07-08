@@ -13,7 +13,7 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <Image Name="image" Style="{StaticResource Image125x125}"/>
+        <Image Name="image" Style="{StaticResource Imag320x320}"/>
         <TextBox Name="caption" Header="caption"/>
     </StackPanel>
 </ContentDialog>

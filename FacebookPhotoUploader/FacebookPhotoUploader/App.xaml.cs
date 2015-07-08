@@ -1,5 +1,6 @@
 ﻿using FacebookPhotoUploader.API.Services;
 using FacebookPhotoUploader.Common;
+using GalaSoft.MvvmLight.Threading;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,6 +60,7 @@ namespace FacebookPhotoUploader
 
                 // Place the frame in the current Window 
                 Window.Current.Content = rootFrame;
+                DispatcherHelper.Initialize();
             }
 
             return rootFrame;

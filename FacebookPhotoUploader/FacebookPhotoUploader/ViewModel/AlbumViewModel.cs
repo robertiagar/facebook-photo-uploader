@@ -3,6 +3,7 @@ using FacebookPhotoUploader.API.Interfaces;
 using FacebookPhotoUploader.API.Models;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage.Pickers;
+using Windows.UI.ViewManagement;
 
 namespace FacebookPhotoUploader.ViewModel
 {
@@ -19,6 +21,7 @@ namespace FacebookPhotoUploader.ViewModel
         private Album _album;
         private IFacebookService faceboookService;
         private CancellationTokenSource cts;
+        private StatusBar statusBar;
 
         public Album Album
         {
@@ -33,7 +36,7 @@ namespace FacebookPhotoUploader.ViewModel
         public ICommand AddPhotoCommand { get; private set; }
 
         public AlbumViewModel(IFacebookService facebookService, IStatusService statusService)
-            :base(statusService)
+            : base(statusService)
         {
             this.faceboookService = facebookService;
             this.cts = new CancellationTokenSource();
@@ -50,6 +53,7 @@ namespace FacebookPhotoUploader.ViewModel
             });
 
             this.PageName = ResourceLoader.GetString("PhotosPageName");
+            this.statusBar = StatusBar.GetForCurrentView();
 
             if (this.IsInDesignMode)
             {
@@ -59,9 +63,9 @@ namespace FacebookPhotoUploader.ViewModel
                 Album = new Album();
                 Album.AddPhoto(new Photo()
                 {
-                    Id="43jk2h42kj3h4",
-                    Caption="photo 1",
-                    ImageLink="Assets/LighGray.png"
+                    Id = "43jk2h42kj3h4",
+                    Caption = "photo 1",
+                    ImageLink = "Assets/LighGray.png"
                 });
                 Album.Name = "design album";
             }
@@ -106,16 +110,19 @@ namespace FacebookPhotoUploader.ViewModel
 
         public async void Report(Facebook.FacebookUploadProgressChangedEventArgs value)
         {
-            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-            //{
-            //    statusBar.ProgressIndicator.ProgressValue = (float)value.ProgressPercentage / 100;
-            //    if (value.ProgressPercentage == 100)
-            //    {
-            //        await statusBar.ProgressIndicator.HideAsync();
-            //    }
-            //});
+            await DispatcherHelper.RunAsync(async () =>
+            {
+                statusBar.ProgressIndicator.ProgressValue = (float)value.ProgressPercentage / 100;
+                if (value.ProgressPercentage == 100)
+                {
+                    await statusBar.ProgressIndicator.HideAsync();
+                }
+            });
         }
 
-        private void Cancel() { cts.Cancel(); }
+        private void Cancel()
+        {
+            cts.Cancel();
+        }
     }
 }

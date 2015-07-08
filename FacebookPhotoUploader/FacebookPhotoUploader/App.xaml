@@ -4,7 +4,7 @@
 
         <DataTemplate x:Key="Standard200x180TileItemTemplate">
             <Grid Margin="0,0,9.5,9.5" Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                <Image Source="{Binding CoverPhotoLink}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Name}" Style="{StaticResource Image125x125}"/>
+                <Image Source="{Binding CoverPhotoLink}" AutomationProperties.Name="{Binding Name}" Style="{StaticResource Image125x125}"/>
                 <StackPanel VerticalAlignment="Bottom" Background="Black" Opacity=".75">
                     <StackPanel VerticalAlignment="Bottom" Margin="9.5,0,0,6.5" >
                         <TextBlock Text="{Binding Name}" Style="{ThemeResource BaseTextBlockStyle}" />
@@ -16,6 +16,17 @@
         <Style TargetType="Image" x:Key="Image125x125">
             <Setter Property="Height" Value="125.5"/>
             <Setter Property="Width" Value="125.5"/>
+            <Setter Property="Stretch" Value="UniformToFill"/>
+        </Style>
+        <Style TargetType="Image" x:Key="Image250x250">
+            <Setter Property="Height" Value="250"/>
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="Stretch" Value="UniformToFill"/>
+        </Style>
+        <Style TargetType="Image" x:Key="Imag320x320">
+            <Setter Property="Height" Value="320"/>
+            <Setter Property="Width" Value="320"/>
+            <Setter Property="Stretch" Value="UniformToFill"/>
         </Style>
     </Application.Resources>
 </Application>
